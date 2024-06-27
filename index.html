@@ -1,0 +1,294 @@
+<!-- Student Name: Wes Phipps -->
+<!-- Programming Language Used:  JavaScript (along with HTML and CSS) -->
+<!-- System Used: Mac -->
+
+<html>
+  <head>
+    <title>Assignment 0</title>
+    <style>
+      h1,
+      h2 {
+        text-align: center;
+      }
+      #scoreboxContainer {
+        display: flex;
+        justify-content: space-around;
+        border: 1px solid black;
+        margin: 5%;
+        padding: 2%;
+        background-color: rgb(250, 211, 211);
+      }
+      #gameButtonsContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      button {
+        border-radius: 20px;
+        background-color: lavender;
+        padding: 5px;
+      }
+      button:hover {
+        cursor: pointer;
+        background-color: rgb(214, 164, 37);
+        color: white;
+      }
+      #arrContainer,
+      #noArrContainer {
+        border: 1px solid black;
+        margin: 5%;
+        padding-bottom: 3%;
+        padding-left: 3%;
+        padding-right: 3%;
+        padding-top: 1%;
+      }
+      #noArrContainer {
+        background-color: rgb(255, 216, 142);
+      }
+      #arrContainer {
+        background-color: lightgoldenrodyellow;
+      }
+      #gameStatusContainer,
+      #largestNumContainer,
+      #smallestNumContainer,
+      #validNumsContainer {
+        display: flex;
+        border: 1px solid black;
+        width: 400px;
+      }
+      .label,
+      .data {
+        flex: 1;
+        padding: 2%;
+        text-align: center;
+      }
+      .label {
+        font-weight: bolder;
+      }
+      .data {
+        border-left: 1px solid black;
+      }
+      #gameStatusContainer {
+        background-color: rgb(254, 254, 254);
+      }
+      #largestNumContainer {
+        background-color: rgb(239, 239, 239);
+      }
+      #smallestNumContainer {
+        background-color: rgb(224, 224, 224);
+      }
+      #validNumsContainer {
+        background-color: rgb(209, 209, 209);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Assignment 0</h1>
+    <div id="scoreboxContainer">
+      <div id="gameDataContainer">
+        <div id="gameStatusContainer">
+          <div class="label">Game Status:</div>
+          <div id="gameStatus" class="data"></div>
+        </div>
+        <div id="largestNumContainer">
+          <div class="label">Largest Number:</div>
+          <div id="largestNum" class="data"></div>
+        </div>
+        <div id="smallestNumContainer">
+          <div class="label">Smallest Number:</div>
+          <div id="smallestNum" class="data"></div>
+        </div>
+        <div id="validNumsContainer">
+          <div class="label">Valid Numbers Entered:</div>
+          <div id="validNums" class="data"></div>
+        </div>
+      </div>
+      <div id="gameButtonsContainer">
+        <button id="beginGameWithoutArray">Begin New Game Without Array</button>
+        <button id="beginGameWithArray">Begin New Game With Array</button>
+      </div>
+    </div>
+    <div>
+      <div id="noArrContainer">
+        <h2>Solution Without Using an Array</h2>
+        <label
+          >Please input a positive number to continue the game or input a -1 to
+          stop the game:
+        </label>
+        <input type="number" name="noArrayUserInput" id="noArrayUserInput" />
+        <button id="submitNoArray">Submit Number</button>
+      </div>
+      <div id="arrContainer">
+        <h2>Solution Using an Array</h2>
+        <div>
+          <label
+            >Please input a positive number to continue the game or input a -1
+            to stop the game:
+          </label>
+          <input type="number" name="arrayUserInput" id="arrayUserInput" />
+          <button id="submitArray">Submit Number</button>
+        </div>
+      </div>
+      <script>
+        // This declares variables that track various game stats
+        let gameStatus = "Inactive";
+        let largestNum;
+        let smallestNum;
+        let validNums;
+        // This array is used later in the handler function that solves the problem with an array
+        const userInputsArr = [];
+
+        // This queries for the divs that will display the game stats variables
+        const largestNumDisplay = document.getElementById("largestNum");
+        const smallestNumDisplay = document.getElementById("smallestNum");
+        const validNumsDisplay = document.getElementById("validNums");
+        const gameStatusDisplay = document.getElementById("gameStatus");
+
+        // This ensures that when the user loads the page, the starting game status displays as 'inactive'
+        gameStatusDisplay.innerText = gameStatus;
+
+        // This function begins the game by reseting the largestNum, smallestNum, and validNums variables and by ensuring they are displayed correctly to the user
+        const beginGame = () => {
+          largestNum = -1;
+          smallestNum = Infinity;
+          validNums = 0;
+
+          largestNumDisplay.innerText = "";
+          smallestNumDisplay.innerText = "";
+          validNumsDisplay.innerText = validNums;
+        };
+
+        // This function handles the user's click of the begin game without an array button, and ensures the game status displays that the game is played without an array
+        const handleBeginGameNoArr = () => {
+          beginGame();
+          gameStatus = "Active Game Without Using an Array";
+          gameStatusDisplay.innerText = gameStatus;
+        };
+
+        // In contrast, this handles the user's click of the begin game with an array button, and ensures the game status display reflects that
+        const handleBeginGameArr = () => {
+          beginGame();
+          gameStatus = "Active Game Using an Array";
+          gameStatusDisplay.innerText = gameStatus;
+        };
+
+        // The following lines query for the buttons and add the handler functions to them through event listeners
+        const noArrBeginGameButton = document.getElementById(
+          "beginGameWithoutArray"
+        );
+
+        const arrBeginGameButton =
+          document.getElementById("beginGameWithArray");
+
+        noArrBeginGameButton.addEventListener("click", function () {
+          handleBeginGameNoArr();
+        });
+
+        arrBeginGameButton.addEventListener("click", function () {
+          handleBeginGameArr();
+        });
+
+        // This handles the user's click of the submit number button without using an array
+        const handleNoArrayUserSubmission = (inputNum) => {
+          // This conditional ensures that a game without an array is active when the user clicks this submit button
+          if (gameStatus !== "Active Game Without Using an Array")
+            alert(
+              'To use this submit button, please first click the "Begin New Game Without Array" Button'
+            );
+          else {
+            // This changes the inputNum to a number
+            inputNum = Number(inputNum);
+            // This ensures the user does not enter a number that is less than -1
+            if (inputNum < 0 && inputNum !== -1)
+              alert(
+                "Please either input a positive number to continue the game or input a -1 to stop the game."
+              );
+            // This ensures that the user does not submit -1 as their first number (they must submit a valid positive number first before stopping the game)
+            else if (inputNum === -1 && validNums === 0)
+              alert(
+                "Please submit a valid positive number before using -1 to stop the game."
+              );
+            // If the user's input is -1, this stops the game by changing the game status, the display for the game status, and alerting the user
+            else if (inputNum === -1) {
+              gameStatus = "Inactive";
+              gameStatusDisplay.innerText = "Inactive";
+              alert(
+                `The largest number you submitted was ${largestNum}.  The smallest number you submitted was ${smallestNum}.  The number of valid numbers you submitted was ${validNums}.  To reset the game, please click one of the "Begin New Game" buttons.`
+              );
+            } else {
+              // This ensures the largestNum is updated based on the user input if necessary
+              if (largestNum < inputNum) {
+                largestNum = inputNum;
+                largestNumDisplay.innerText = largestNum;
+              }
+              // This ensures the smallestNum is updated based on the user input if necessary
+              if (smallestNum > inputNum) {
+                smallestNum = inputNum;
+                smallestNumDisplay.innerText = smallestNum;
+              }
+              // This updates the count for the number of valid inputs from the user and updates the display for that number
+              validNums++;
+              validNumsDisplay.innerText = validNums;
+            }
+          }
+        };
+
+        // This handles the click of the submit number button using an array
+        const handleArrayUserSubmission = (inputNum) => {
+          // This ensures a game with an array is active when the user clicks the submit number button
+          if (gameStatus !== "Active Game Using an Array")
+            alert(
+              'To use this submit button, please first click the "Begin New Game With Array" Button'
+            );
+          else {
+            // This converts the inputNum to a number
+            inputNum = Number(inputNum);
+            // This ensures the user's inputs are greater than or equal to -1
+            if (inputNum < 0 && inputNum !== -1)
+              alert(
+                "Please either input a positive number to continue the game or input a -1 to stop the game."
+              );
+            // This prevents the user from entering -1 as their first number
+            else if (inputNum === -1 && validNums === 0)
+              alert(
+                "Please submit a valid positive number before using -1 to stop the game."
+              );
+            // This handles when the user enters -1 to end the game by changing the game status, the game status display, and providing an alert
+            else if (inputNum === -1) {
+              gameStatus = "Inactive";
+              gameStatusDisplay.innerText = "Inactive";
+              alert(
+                `The largest number you submitted was ${largestNum}.  The smallest number you submitted was ${smallestNum}.  The number of valid numbers you submitted was ${validNums}.  To reset the game, please click one of the "Begin New Game" buttons.`
+              );
+            } else {
+              // This uses an array to solve the problem by pushing the user input into the array, then sorting the array.  Once sorted, the smallest number is the first element in the array, the largest number is the last element in the array, and the count for the valid inputs from the user is the length of the array.
+              userInputsArr.push(Number(inputNum));
+              userInputsArr.sort((num1, num2) => num1 - num2);
+              smallestNum = userInputsArr[0];
+              smallestNumDisplay.innerText = smallestNum;
+              largestNum = userInputsArr[userInputsArr.length - 1];
+              largestNumDisplay.innerText = largestNum;
+              validNums = userInputsArr.length;
+              validNumsDisplay.innerText = validNums;
+            }
+          }
+        };
+        // The following lines query for the submit number buttons and attach the appropriate handler functions to them to solve the problem with or without use of an array
+        const noArrayButton = document.getElementById("submitNoArray");
+        const arrayButton = document.getElementById("submitArray");
+
+        noArrayButton.addEventListener("click", function () {
+          const userNoArrInput = document.getElementById("noArrayUserInput");
+          handleNoArrayUserSubmission(userNoArrInput.value);
+          userNoArrInput.value = "";
+        });
+
+        arrayButton.addEventListener("click", function () {
+          const userArrInput = document.getElementById("arrayUserInput");
+          handleArrayUserSubmission(userArrInput.value);
+          userArrInput.value = "";
+        });
+      </script>
+    </div>
+  </body>
+</html>
